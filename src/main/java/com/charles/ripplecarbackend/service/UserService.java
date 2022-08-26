@@ -83,8 +83,8 @@ public class UserService implements UserDetailsService, BasicService {
 
     @Transactional
     public ResponseDTO save(UserDTO dto) {
-        validateExistsName(dto);
         validateExistsEmail(dto);
+        validateExistsName(dto);
         User user = mapper.toEntity(dto);
         user.setPassword(encoder.encode(dto.getPassword()));
         user.setStatus(StatusEnum.ACTIVE);
