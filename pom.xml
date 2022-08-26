@@ -20,6 +20,7 @@
         <mapstruct-processor.version>1.5.2.Final</mapstruct-processor.version>
         <mapstruct.version>1.5.2.Final</mapstruct.version>
         <springdoc-openapi-ui.version>1.6.10</springdoc-openapi-ui.version>
+        <postgresql.version>42.4.2</postgresql.version>
     </properties>
     <dependencies>
         <dependency>
@@ -42,6 +43,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
