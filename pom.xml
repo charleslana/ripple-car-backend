@@ -21,6 +21,7 @@
         <mapstruct.version>1.5.2.Final</mapstruct.version>
         <springdoc-openapi-ui.version>1.6.10</springdoc-openapi-ui.version>
         <postgresql.version>42.4.2</postgresql.version>
+        <junit-vintage-engine.version>5.9.0</junit-vintage-engine.version>
     </properties>
     <dependencies>
         <dependency>
@@ -86,6 +87,17 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>${springdoc-openapi-ui.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit-vintage-engine.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -93,6 +105,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${project.parent.version}</version>
                 <configuration>
                     <excludes>
                         <exclude>
@@ -112,7 +125,7 @@
                 <activatedProperties>dev</activatedProperties>
             </properties>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
         <profile>
@@ -121,7 +134,7 @@
                 <activatedProperties>prod</activatedProperties>
             </properties>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
         </profile>
     </profiles>

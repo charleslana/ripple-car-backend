@@ -12,7 +12,10 @@ public class SecurityUtils {
     }
 
     public static String getAuthEmail() {
-        return ((UserDetailsDTO) getAuth().getPrincipal()).getUsername();
+//        return ((UserDetailsDTO) getAuth().getPrincipal()).getUsername();
+
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        return loggedInUser.getName();
     }
 
     private static Authentication getAuth() {

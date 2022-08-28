@@ -12,8 +12,4 @@ public class LocaleUtils {
     public static Locale currentLocale() {
         return LocaleContextHolder.getLocale();
     }
-
-    public static boolean isPortuguese() {
-        return currentLocale().toLanguageTag().equals("pt-BR");
-    }
 }
