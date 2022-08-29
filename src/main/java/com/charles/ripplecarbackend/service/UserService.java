@@ -17,6 +17,10 @@ import com.charles.ripplecarbackend.service.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,8 +49,11 @@ public class UserService implements UserDetailsService, BasicService {
         return repository.findById(getAuthUser().getId()).map(mapper::toBasicDto).orElseThrow(() -> getException("user.not.found"));
     }
 
-    public List<UserBasicDTO> getAll() {
-        return repository.findAll().stream().map(mapper::toBasicDto).toList();
+    public PageImpl<UserBasicDTO> getAll() {
+        int page = 0;
+        int size = 10;
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
+        return new PageImpl<>(repository.findAll().stream().map(mapper::toBasicDto).toList(), pageRequest, size);
     }
 
     public User getAuthUser() {
@@ -91,6 +98,14 @@ public class UserService implements UserDetailsService, BasicService {
         user.setRole(RoleEnum.USER);
         repository.save(user);
         return getSuccess("user.created");
+    }
+
+    public Page<UserBasicDTO> search(String searchTerm, Integer page, Integer size) {
+        if (size <= 0 || size > 20) {
+            size = 1;
+        }
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
+        return repository.search(searchTerm.toLowerCase(), pageRequest).map(mapper::toBasicDto);
     }
 
     @Transactional

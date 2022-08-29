@@ -103,7 +103,7 @@ class UserServiceTest extends ConfigTest {
         mockMvc.perform(get("/user")
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(1)));
+                .andExpect(jsonPath("$.content", hasSize(1)));
     }
 
     @Test
@@ -146,5 +146,47 @@ class UserServiceTest extends ConfigTest {
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertEquals("user.exists.name", result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    @DisplayName("Should search user with size 0")
+    @Order(7)
+    @WithMockUser(username = "auth@auth.com", password = "123456", roles = "ADMIN")
+    void shouldSearchUserWithSize0() throws Exception {
+        JSONObject data = new JSONObject();
+        data.put("email", "auth2@auth.com");
+        data.put("password", "123456");
+        data.put("name", "Auth2");
+
+        mockMvc.perform(post("/user")
+                        .content(String.valueOf(data))
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/user/search?searchTerm=auth&size=0")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("Should search user with size more than 20")
+    @Order(7)
+    @WithMockUser(username = "auth@auth.com", password = "123456", roles = "ADMIN")
+    void shouldSearchUserWithSizeMoreThan20() throws Exception {
+        JSONObject data = new JSONObject();
+        data.put("email", "auth2@auth.com");
+        data.put("password", "123456");
+        data.put("name", "Auth2");
+
+        mockMvc.perform(post("/user")
+                        .content(String.valueOf(data))
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/user/search?searchTerm=auth&size=21")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)));
     }
 }

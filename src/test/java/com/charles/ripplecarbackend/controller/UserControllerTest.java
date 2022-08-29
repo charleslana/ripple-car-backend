@@ -14,6 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -115,5 +118,20 @@ class UserControllerTest extends ConfigTest {
         List<User> users = userRepository.findAll();
 
         Assertions.assertEquals("Auth_Update", users.get(0).getName());
+    }
+
+    @Test
+    @DisplayName("Should search users")
+    @Order(5)
+    @WithMockUser(username = "auth@auth.com", password = "123456", roles = "ADMIN")
+    void shouldSearchUser() throws Exception {
+        mockMvc.perform(get("/user/search?searchTerm=auth")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        PageRequest pageRequest = PageRequest.of(0, 1, Sort.Direction.ASC, "name");
+        Page<User> search = userRepository.search("auth", pageRequest);
+
+        Assertions.assertEquals(1, search.toList().size());
     }
 }
