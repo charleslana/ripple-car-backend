@@ -4,6 +4,7 @@ import com.charles.ripplecarbackend.model.dto.ResponseDTO;
 import com.charles.ripplecarbackend.model.dto.UserBasicDTO;
 import com.charles.ripplecarbackend.model.dto.UserDTO;
 import com.charles.ripplecarbackend.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,12 +28,14 @@ public class UserController {
 
     private final UserService service;
 
+    @Operation(summary = "Create user")
     @PostMapping
     public ResponseEntity<ResponseDTO> create(@RequestBody @Valid UserDTO dto) {
         log.info("REST request to create user: {}", dto);
         return ResponseEntity.ok(service.save(dto));
     }
 
+    @Operation(summary = "Get user details")
     @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_USER')")
     @GetMapping("/details")
     public ResponseEntity<UserBasicDTO> get() {
@@ -40,6 +43,7 @@ public class UserController {
         return ResponseEntity.ok(service.get());
     }
 
+    @Operation(summary = "Get all users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<Page<UserBasicDTO>> getAll() {
@@ -47,6 +51,7 @@ public class UserController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @Operation(summary = "Get search users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/search")
     public ResponseEntity<Page<UserBasicDTO>> search(
@@ -57,6 +62,7 @@ public class UserController {
         return ResponseEntity.ok(service.search(searchTerm, page, size));
     }
 
+    @Operation(summary = "Update user")
     @PreAuthorize("isAuthenticated()")
     @PutMapping
     public ResponseEntity<ResponseDTO> update(@RequestBody @Valid UserDTO dto) {
