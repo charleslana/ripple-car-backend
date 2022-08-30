@@ -23,6 +23,11 @@ public class CarDTO implements Serializable {
     private String name;
 
     @NotNull
+    @NotBlank
+    @Size(min = 1, max = 255)
+    private String image;
+
+    @NotNull
     @Min(0)
     private Long acceleration;
 

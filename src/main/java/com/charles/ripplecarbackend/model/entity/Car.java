@@ -34,6 +34,9 @@ public class Car implements Serializable {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
+    @Column(name = "image", nullable = false)
+    private String image;
+
     @Column(name = "acceleration", nullable = false)
     private Long acceleration;
 

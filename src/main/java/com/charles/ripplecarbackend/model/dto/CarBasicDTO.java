@@ -15,6 +15,7 @@ public class CarBasicDTO implements Serializable {
 
     private Long id;
     private String name;
+    private String image;
     private Long acceleration;
     private Long topSpeed;
     private Long control;

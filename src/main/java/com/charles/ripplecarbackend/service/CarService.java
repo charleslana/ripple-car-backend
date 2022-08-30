@@ -82,6 +82,7 @@ public class CarService implements BasicService {
         Car car = repository.findById(id).orElseThrow(() -> getException("car.not.found"));
         validateExistsName(dto, car);
         car.setName(dto.getName());
+        car.setImage(dto.getImage());
         car.setAcceleration(dto.getAcceleration());
         car.setTopSpeed(dto.getTopSpeed());
         car.setControl(dto.getControl());
