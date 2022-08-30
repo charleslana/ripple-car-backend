@@ -3,6 +3,7 @@ package com.charles.ripplecarbackend.controller;
 import com.charles.ripplecarbackend.model.dto.ResponseDTO;
 import com.charles.ripplecarbackend.model.dto.UserBasicDTO;
 import com.charles.ripplecarbackend.model.dto.UserDTO;
+import com.charles.ripplecarbackend.model.dto.UserSearchDTO;
 import com.charles.ripplecarbackend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -52,9 +53,9 @@ public class UserController {
     }
 
     @Operation(summary = "Get search users")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
-    public ResponseEntity<Page<UserBasicDTO>> search(
+    public ResponseEntity<Page<UserSearchDTO>> search(
             @RequestParam("searchTerm") String searchTerm,
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size) {

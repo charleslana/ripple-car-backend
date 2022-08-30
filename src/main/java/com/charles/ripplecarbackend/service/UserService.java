@@ -7,6 +7,7 @@ import com.charles.ripplecarbackend.model.dto.ResponseDTO;
 import com.charles.ripplecarbackend.model.dto.UserBasicDTO;
 import com.charles.ripplecarbackend.model.dto.UserDTO;
 import com.charles.ripplecarbackend.model.dto.UserDetailsDTO;
+import com.charles.ripplecarbackend.model.dto.UserSearchDTO;
 import com.charles.ripplecarbackend.model.entity.User;
 import com.charles.ripplecarbackend.model.enums.RoleEnum;
 import com.charles.ripplecarbackend.model.enums.StatusEnum;
@@ -100,12 +101,12 @@ public class UserService implements UserDetailsService, BasicService {
         return getSuccess("user.created");
     }
 
-    public Page<UserBasicDTO> search(String searchTerm, Integer page, Integer size) {
+    public Page<UserSearchDTO> search(String searchTerm, Integer page, Integer size) {
         if (size <= 0 || size > 20) {
             size = 1;
         }
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
-        return repository.search(searchTerm.toLowerCase(), pageRequest).map(mapper::toBasicDto);
+        return repository.search(searchTerm.toLowerCase(), pageRequest).map(mapper::toSearchDto);
     }
 
     @Transactional

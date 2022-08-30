@@ -2,6 +2,7 @@ package com.charles.ripplecarbackend.mapper;
 
 import com.charles.ripplecarbackend.model.dto.UserBasicDTO;
 import com.charles.ripplecarbackend.model.dto.UserDTO;
+import com.charles.ripplecarbackend.model.dto.UserSearchDTO;
 import com.charles.ripplecarbackend.model.entity.User;
 import org.mapstruct.Mapper;
 
@@ -12,7 +13,11 @@ public interface UserMapper {
 
     UserBasicDTO toBasicDto(User entity);
 
+    UserSearchDTO toSearchDto(User entity);
+
     User toEntity(UserDTO dto);
 
     User toEntity(UserBasicDTO dto);
+
+    User toEntity(UserSearchDTO dto);
 }

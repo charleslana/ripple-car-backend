@@ -151,7 +151,6 @@ class UserServiceTest extends ConfigTest {
     @Test
     @DisplayName("Should search user with size 0")
     @Order(7)
-    @WithMockUser(username = "auth@auth.com", password = "123456", roles = "ADMIN")
     void shouldSearchUserWithSize0() throws Exception {
         JSONObject data = new JSONObject();
         data.put("email", "auth2@auth.com");
@@ -172,7 +171,6 @@ class UserServiceTest extends ConfigTest {
     @Test
     @DisplayName("Should search user with size more than 20")
     @Order(7)
-    @WithMockUser(username = "auth@auth.com", password = "123456", roles = "ADMIN")
     void shouldSearchUserWithSizeMoreThan20() throws Exception {
         JSONObject data = new JSONObject();
         data.put("email", "auth2@auth.com");

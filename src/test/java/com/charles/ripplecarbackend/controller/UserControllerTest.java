@@ -123,7 +123,6 @@ class UserControllerTest extends ConfigTest {
     @Test
     @DisplayName("Should search users")
     @Order(5)
-    @WithMockUser(username = "auth@auth.com", password = "123456", roles = "ADMIN")
     void shouldSearchUser() throws Exception {
         mockMvc.perform(get("/user/search?searchTerm=auth")
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
