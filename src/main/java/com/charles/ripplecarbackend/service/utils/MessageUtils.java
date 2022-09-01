@@ -10,4 +10,7 @@ public class MessageUtils {
 
     public static final String CAR_EXCEPTION = "car.exception";
     public static final String CAR_SUCCESS = "car.success";
+
+    public static final String USER_CAR_EXCEPTION = "user.car.exception";
+    public static final String USER_CAR_SUCCESS = "user.car.success";
 }
