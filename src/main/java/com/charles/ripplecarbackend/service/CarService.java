@@ -33,13 +33,6 @@ public class CarService implements BasicService {
     private final MessageSource ms;
     private final CarRepository repository;
 
-    @Transactional
-    public ResponseDTO delete(Long id) {
-        Car car = repository.findById(id).orElseThrow(() -> getException("car.not.found"));
-        repository.delete(car);
-        return getSuccess("car.deleted");
-    }
-
     public CarBasicDTO get(Long id) {
         return repository.findById(id).map(mapper::toBasicDto).orElseThrow(() -> getException("car.not.found"));
     }
@@ -51,14 +44,12 @@ public class CarService implements BasicService {
         return new PageImpl<>(repository.findAll().stream().map(mapper::toBasicDto).toList(), pageRequest, size);
     }
 
-    @Override
-    public BusinessRuleException getException(String message) {
-        return new BusinessRuleException(MessageUtils.CAR_EXCEPTION, message);
-    }
-
-    @Override
-    public ResponseDTO getSuccess(String message) {
-        return new ResponseDTO(MessageUtils.CAR_SUCCESS, message, null, LocaleUtils.currentLocale(), ms);
+    public Page<CarSearchDTO> search(String searchTerm, Integer page, Integer size) {
+        if (size <= 0 || size > 20) {
+            size = 1;
+        }
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
+        return repository.search(searchTerm.toLowerCase(), pageRequest).map(mapper::toSearchDto);
     }
 
     @Transactional
@@ -67,14 +58,6 @@ public class CarService implements BasicService {
         Car car = mapper.toEntity(dto);
         repository.save(car);
         return getSuccess("car.created");
-    }
-
-    public Page<CarSearchDTO> search(String searchTerm, Integer page, Integer size) {
-        if (size <= 0 || size > 20) {
-            size = 1;
-        }
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
-        return repository.search(searchTerm.toLowerCase(), pageRequest).map(mapper::toSearchDto);
     }
 
     @Transactional
@@ -91,6 +74,23 @@ public class CarService implements BasicService {
         car.setPotency(dto.getPotency());
         car.setNitro(dto.getNitro());
         return getSuccess("car.updated");
+    }
+
+    @Transactional
+    public ResponseDTO delete(Long id) {
+        Car car = repository.findById(id).orElseThrow(() -> getException("car.not.found"));
+        repository.delete(car);
+        return getSuccess("car.deleted");
+    }
+
+    @Override
+    public BusinessRuleException getException(String message) {
+        return new BusinessRuleException(MessageUtils.CAR_EXCEPTION, message);
+    }
+
+    @Override
+    public ResponseDTO getSuccess(String message) {
+        return new ResponseDTO(MessageUtils.CAR_SUCCESS, message, null, LocaleUtils.currentLocale(), ms);
     }
 
     private void validateExistsName(CarDTO dto, Car car) {

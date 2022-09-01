@@ -3,6 +3,7 @@ package com.charles.ripplecarbackend.controller;
 import com.charles.ripplecarbackend.ConfigTest;
 import com.charles.ripplecarbackend.model.entity.User;
 import com.charles.ripplecarbackend.repository.UserRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -34,6 +35,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser(username = "auth@auth.com", password = "123456", roles = "USER")
 class UserControllerTest extends ConfigTest {
 
+    private final String domain = "@mail.com";
+    private final String randomString = RandomStringUtils.randomAlphanumeric(10);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -60,9 +64,9 @@ class UserControllerTest extends ConfigTest {
     @Order(1)
     void shouldCreateUser() throws Exception {
         JSONObject data = new JSONObject();
-        data.put("email", "example3@example.com");
-        data.put("password", "123456");
-        data.put("name", "Example3");
+        data.put("email", randomString.concat(domain));
+        data.put("password", randomString);
+        data.put("name", randomString);
 
         mockMvc.perform(post("/user")
                         .content(String.valueOf(data))
@@ -71,7 +75,7 @@ class UserControllerTest extends ConfigTest {
 
         List<User> users = userRepository.findAll();
 
-        Assertions.assertEquals("example3@example.com", users.get(users.size() - 1).getEmail());
+        Assertions.assertEquals(randomString.concat(domain), users.get(users.size() - 1).getEmail());
     }
 
     @Test

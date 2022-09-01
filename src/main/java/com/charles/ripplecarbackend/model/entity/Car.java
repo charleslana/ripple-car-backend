@@ -1,5 +1,7 @@
 package com.charles.ripplecarbackend.model.entity;
 
+import com.charles.ripplecarbackend.model.enums.CarClassEnum;
+import com.charles.ripplecarbackend.model.enums.RarityEnum;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -57,6 +61,14 @@ public class Car implements Serializable {
 
     @Column(name = "nitro", nullable = false)
     private Long nitro;
+
+    @Column(name = "rarity", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RarityEnum rarity;
+
+    @Column(name = "car_class", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CarClassEnum carClass;
 
     @Column(name = "created_at")
     @CreationTimestamp

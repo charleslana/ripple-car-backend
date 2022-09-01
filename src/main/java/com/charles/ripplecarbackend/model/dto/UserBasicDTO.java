@@ -16,4 +16,9 @@ public class UserBasicDTO implements Serializable {
     private Long id;
     private String email;
     private String name;
+    private String avatar;
+    private Long level;
+    private Long coin;
+    private Long starCoin;
+    private Long fan;
 }

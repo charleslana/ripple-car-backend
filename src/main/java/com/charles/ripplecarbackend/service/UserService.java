@@ -50,6 +50,10 @@ public class UserService implements UserDetailsService, BasicService {
         return repository.findById(getAuthUser().getId()).map(mapper::toBasicDto).orElseThrow(() -> getException("user.not.found"));
     }
 
+    public UserBasicDTO get(Long id) {
+        return repository.findById(id).map(mapper::toBasicDto).orElseThrow(() -> getException("user.not.found"));
+    }
+
     public PageImpl<UserBasicDTO> getAll() {
         int page = 0;
         int size = 10;
@@ -57,9 +61,30 @@ public class UserService implements UserDetailsService, BasicService {
         return new PageImpl<>(repository.findAll().stream().map(mapper::toBasicDto).toList(), pageRequest, size);
     }
 
-    public User getAuthUser() {
-        String email = SecurityUtils.getAuthEmail();
-        return getUserByEmail(email);
+    public Page<UserSearchDTO> search(String searchTerm, Integer page, Integer size) {
+        if (size <= 0 || size > 20) {
+            size = 1;
+        }
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
+        return repository.search(searchTerm.toLowerCase(), pageRequest).map(mapper::toSearchDto);
+    }
+
+    @Transactional
+    public ResponseDTO save(UserDTO dto) {
+        validateExistsEmail(dto);
+        validateExistsName(dto);
+        User user = mapper.toEntity(dto);
+        user.setPassword(encoder.encode(dto.getPassword()));
+        repository.save(user);
+        return getSuccess("user.created");
+    }
+
+    @Transactional
+    public ResponseDTO update(UserDTO dto) {
+        User user = getAuthUser();
+        validateExistsName(dto, user);
+        user.setName(dto.getName());
+        return getSuccess("user.updated");
     }
 
     @Override
@@ -70,6 +95,11 @@ public class UserService implements UserDetailsService, BasicService {
     @Override
     public ResponseDTO getSuccess(String message) {
         return new ResponseDTO(MessageUtils.USER_SUCCESS, message, null, LocaleUtils.currentLocale(), ms);
+    }
+
+    public User getAuthUser() {
+        String email = SecurityUtils.getAuthEmail();
+        return getUserByEmail(email);
     }
 
     public List<GrantedAuthority> getRoles(String email) {
@@ -87,34 +117,6 @@ public class UserService implements UserDetailsService, BasicService {
         User user = repository.findByEmailAndStatusNot(username, StatusEnum.INACTIVE).orElseThrow(() -> new UsernameNotFoundException(String.format("email %s does not exists or account not active", username)));
         List<GrantedAuthority> roles = Collections.singletonList(new SimpleGrantedAuthority(RoleEnum.ADMIN.equals(user.getRole()) ? "ROLE_ADMIN" : "ROLE_USER"));
         return new UserDetailsDTO(roles, user.getPassword(), user.getEmail());
-    }
-
-    @Transactional
-    public ResponseDTO save(UserDTO dto) {
-        validateExistsEmail(dto);
-        validateExistsName(dto);
-        User user = mapper.toEntity(dto);
-        user.setPassword(encoder.encode(dto.getPassword()));
-        user.setStatus(StatusEnum.ACTIVE);
-        user.setRole(RoleEnum.USER);
-        repository.save(user);
-        return getSuccess("user.created");
-    }
-
-    public Page<UserSearchDTO> search(String searchTerm, Integer page, Integer size) {
-        if (size <= 0 || size > 20) {
-            size = 1;
-        }
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
-        return repository.search(searchTerm.toLowerCase(), pageRequest).map(mapper::toSearchDto);
-    }
-
-    @Transactional
-    public ResponseDTO update(UserDTO dto) {
-        User user = getAuthUser();
-        validateExistsName(dto, user);
-        user.setName(dto.getName());
-        return getSuccess("user.updated");
     }
 
     private void validateExistsEmail(UserDTO dto) {

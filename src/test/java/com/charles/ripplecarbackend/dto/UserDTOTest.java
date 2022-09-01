@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserDTOTest extends ConfigTest {
 
+    private final String domain = "@mail.com";
+    private final String randomString = RandomStringUtils.randomAlphanumeric(10);
     private Validator validator;
 
     @BeforeEach
@@ -34,9 +36,9 @@ class UserDTOTest extends ConfigTest {
     @Order(1)
     void shouldValidateUserDTOWithSuccess() {
         UserDTO dto = new UserDTO();
-        dto.setEmail("example@example.com");
-        dto.setPassword("123456");
-        dto.setName("example");
+        dto.setEmail(randomString.concat(domain));
+        dto.setPassword(randomString);
+        dto.setName(randomString);
         Set<ConstraintViolation<UserDTO>> violations = validator.validate(dto);
         assertEquals(0, violations.size());
     }
@@ -46,9 +48,9 @@ class UserDTOTest extends ConfigTest {
     @Order(2)
     void shouldValidateUserDTOEmailIsInvalid() {
         UserDTO dto = new UserDTO();
-        dto.setEmail("example");
-        dto.setPassword("123456");
-        dto.setName("example");
+        dto.setEmail(randomString);
+        dto.setPassword(randomString);
+        dto.setName(randomString);
         Set<ConstraintViolation<UserDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
     }
@@ -58,8 +60,8 @@ class UserDTOTest extends ConfigTest {
     @Order(3)
     void shouldValidateUserDTONameIsInvalid() {
         UserDTO dto = new UserDTO();
-        dto.setEmail("example@example.com");
-        dto.setPassword("123456");
+        dto.setEmail(randomString.concat(domain));
+        dto.setPassword(randomString);
         dto.setName("example name");
         Set<ConstraintViolation<UserDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
@@ -70,8 +72,8 @@ class UserDTOTest extends ConfigTest {
     @Order(4)
     void shouldValidateUserDTONameIsShort() {
         UserDTO dto = new UserDTO();
-        dto.setEmail("example@example.com");
-        dto.setPassword("123456");
+        dto.setEmail(randomString.concat(domain));
+        dto.setPassword(randomString);
         dto.setName(RandomStringUtils.randomAlphanumeric(2));
         Set<ConstraintViolation<UserDTO>> violations = validator.validate(dto);
         assertEquals(2, violations.size());
@@ -82,8 +84,8 @@ class UserDTOTest extends ConfigTest {
     @Order(5)
     void shouldValidateUserDTONameIsBig() {
         UserDTO dto = new UserDTO();
-        dto.setEmail("example@example.com");
-        dto.setPassword("123456");
+        dto.setEmail(randomString.concat(domain));
+        dto.setPassword(randomString);
         dto.setName(RandomStringUtils.randomAlphanumeric(21));
         Set<ConstraintViolation<UserDTO>> violations = validator.validate(dto);
         assertEquals(2, violations.size());
@@ -94,9 +96,9 @@ class UserDTOTest extends ConfigTest {
     @Order(6)
     void shouldValidateUserDTOPasswordIsShort() {
         UserDTO dto = new UserDTO();
-        dto.setEmail("example@example.com");
+        dto.setEmail(randomString.concat(domain));
         dto.setPassword(RandomStringUtils.randomAlphanumeric(5));
-        dto.setName("example");
+        dto.setName(randomString);
         Set<ConstraintViolation<UserDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
     }

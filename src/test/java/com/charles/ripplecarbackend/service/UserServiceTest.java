@@ -2,6 +2,7 @@ package com.charles.ripplecarbackend.service;
 
 import com.charles.ripplecarbackend.ConfigTest;
 import com.charles.ripplecarbackend.repository.UserRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @WithMockUser(username = "auth@auth.com", password = "123456", roles = "USER")
 class UserServiceTest extends ConfigTest {
+
+    private final String domain = "@mail.com";
+    private final String randomString = RandomStringUtils.randomAlphanumeric(10);
 
     @Autowired
     private UserRepository userRepository;
@@ -111,9 +115,9 @@ class UserServiceTest extends ConfigTest {
     @Order(5)
     void shouldUpdateUser() throws Exception {
         JSONObject data = new JSONObject();
-        data.put("email", "exist@example.com");
-        data.put("password", "123456");
-        data.put("name", "Name_Updated");
+        data.put("email", randomString.concat(domain));
+        data.put("password", randomString);
+        data.put("name", randomString);
 
         mockMvc.perform(put("/user")
                         .content(String.valueOf(data))
@@ -127,9 +131,9 @@ class UserServiceTest extends ConfigTest {
     @Order(6)
     void shouldNotUpdateUserWhenNameAlreadyExistsInOtherUser() throws Exception {
         JSONObject data = new JSONObject();
-        data.put("email", "exist@example.com");
-        data.put("password", "123456");
-        data.put("name", "Name_update");
+        data.put("email", randomString.concat(domain));
+        data.put("password", randomString);
+        data.put("name", randomString);
 
         mockMvc.perform(post("/user")
                         .content(String.valueOf(data))
@@ -137,9 +141,9 @@ class UserServiceTest extends ConfigTest {
                 .andExpect(status().isOk());
 
         data = new JSONObject();
-        data.put("email", "exist@example.com");
-        data.put("password", "123456");
-        data.put("name", "Name_update");
+        data.put("email", randomString.concat(domain));
+        data.put("password", randomString);
+        data.put("name", randomString);
 
         mockMvc.perform(put("/user")
                         .content(String.valueOf(data))
@@ -149,20 +153,20 @@ class UserServiceTest extends ConfigTest {
     }
 
     @Test
-    @DisplayName("Should search user with size 0")
+    @DisplayName("Should search user with page size 0")
     @Order(7)
     void shouldSearchUserWithSize0() throws Exception {
         JSONObject data = new JSONObject();
-        data.put("email", "auth2@auth.com");
-        data.put("password", "123456");
-        data.put("name", "Auth2");
+        data.put("email", randomString.concat(domain));
+        data.put("password", randomString);
+        data.put("name", randomString);
 
         mockMvc.perform(post("/user")
                         .content(String.valueOf(data))
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/user/search?searchTerm=auth&size=0")
+        mockMvc.perform(get(String.format("/user/search?searchTerm=%s&size=0", randomString))
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)));
@@ -173,16 +177,16 @@ class UserServiceTest extends ConfigTest {
     @Order(7)
     void shouldSearchUserWithSizeMoreThan20() throws Exception {
         JSONObject data = new JSONObject();
-        data.put("email", "auth2@auth.com");
-        data.put("password", "123456");
-        data.put("name", "Auth2");
+        data.put("email", randomString.concat(domain));
+        data.put("password", randomString);
+        data.put("name", randomString);
 
         mockMvc.perform(post("/user")
                         .content(String.valueOf(data))
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/user/search?searchTerm=auth&size=21")
+        mockMvc.perform(get(String.format("/user/search?searchTerm=%s&size=21", randomString))
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)));

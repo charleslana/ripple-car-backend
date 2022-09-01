@@ -1,5 +1,7 @@
 package com.charles.ripplecarbackend.model.dto;
 
+import com.charles.ripplecarbackend.model.enums.CarClassEnum;
+import com.charles.ripplecarbackend.model.enums.RarityEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,4 +25,6 @@ public class CarBasicDTO implements Serializable {
     private Long toughness;
     private Long potency;
     private Long nitro;
+    private RarityEnum rarity;
+    private CarClassEnum carClass;
 }

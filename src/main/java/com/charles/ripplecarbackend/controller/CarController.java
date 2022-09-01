@@ -31,22 +31,6 @@ public class CarController {
 
     private final CarService service;
 
-    @Operation(summary = "Create car")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping
-    public ResponseEntity<ResponseDTO> create(@RequestBody @Valid CarDTO dto) {
-        log.info("REST request to create car: {}", dto);
-        return ResponseEntity.ok(service.save(dto));
-    }
-
-    @Operation(summary = "Delete car by id")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDTO> delete(@PathVariable("id") Long id) {
-        log.info("REST to delete car by id: {}", id);
-        return ResponseEntity.ok(service.delete(id));
-    }
-
     @Operation(summary = "Get car by id")
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
@@ -56,7 +40,7 @@ public class CarController {
     }
 
     @Operation(summary = "Get all cars")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<Page<CarBasicDTO>> getAll() {
         log.info("REST to get all cars");
@@ -66,12 +50,17 @@ public class CarController {
     @Operation(summary = "Get search cars")
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
-    public ResponseEntity<Page<CarSearchDTO>> search(
-            @RequestParam("searchTerm") String searchTerm,
-            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+    public ResponseEntity<Page<CarSearchDTO>> search(@RequestParam("searchTerm") String searchTerm, @RequestParam(value = "page", required = false, defaultValue = "0") int page, @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("REST to get search cars");
         return ResponseEntity.ok(service.search(searchTerm, page, size));
+    }
+
+    @Operation(summary = "Create car")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping
+    public ResponseEntity<ResponseDTO> save(@RequestBody @Valid CarDTO dto) {
+        log.info("REST request to create car: {}", dto);
+        return ResponseEntity.ok(service.save(dto));
     }
 
     @Operation(summary = "Update car")
@@ -80,5 +69,13 @@ public class CarController {
     public ResponseEntity<ResponseDTO> update(@RequestBody @Valid CarDTO dto, @PathVariable("id") Long id) {
         log.info("REST request to update car: {}", dto);
         return ResponseEntity.ok(service.update(dto, id));
+    }
+
+    @Operation(summary = "Delete car by id")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDTO> delete(@PathVariable("id") Long id) {
+        log.info("REST to delete car by id: {}", id);
+        return ResponseEntity.ok(service.delete(id));
     }
 }

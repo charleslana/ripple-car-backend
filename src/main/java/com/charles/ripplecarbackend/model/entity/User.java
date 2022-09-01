@@ -50,11 +50,26 @@ public class User implements Serializable, UserDetails {
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private StatusEnum status;
+    private StatusEnum status = StatusEnum.ACTIVE;
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private RoleEnum role;
+    private RoleEnum role = RoleEnum.USER;
+
+    @Column(name = "avatar")
+    private String avatar;
+
+    @Column(name = "level", nullable = false)
+    private Long level = 0L;
+
+    @Column(name = "coin", nullable = false)
+    private Long coin = 5000L;
+
+    @Column(name = "star_coin", nullable = false)
+    private Long starCoin = 0L;
+
+    @Column(name = "fan", nullable = false)
+    private Long fan = 0L;
 
     @Column(name = "created_at")
     @CreationTimestamp
