@@ -27,7 +27,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "app_car")
+@Table(name = "tb_car")
 public class Car implements Serializable {
 
     @Serial

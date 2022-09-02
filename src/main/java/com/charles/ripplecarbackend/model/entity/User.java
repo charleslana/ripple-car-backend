@@ -27,7 +27,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @Entity
-@Table(name = "app_user")
+@Table(name = "tb_user")
 public class User implements Serializable, UserDetails {
 
     @Serial
