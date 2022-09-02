@@ -22,8 +22,4 @@ public class UserCarDTO implements Serializable {
     @NotNull
     @Min(0)
     private Long carId;
-
-    @NotNull
-    @Min(0)
-    private Long garageId;
 }

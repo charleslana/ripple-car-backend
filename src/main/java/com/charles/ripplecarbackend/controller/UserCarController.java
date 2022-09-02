@@ -46,7 +46,7 @@ public class UserCarController {
     }
 
     @Operation(summary = "Get all user cars")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<Page<UserCarBasicDTO>> getAll() {
         log.info("REST to get all user cars");

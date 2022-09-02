@@ -6,7 +6,6 @@ import com.charles.ripplecarbackend.model.dto.ResponseDTO;
 import com.charles.ripplecarbackend.model.dto.UserCarBasicDTO;
 import com.charles.ripplecarbackend.model.dto.UserCarDTO;
 import com.charles.ripplecarbackend.model.entity.Car;
-import com.charles.ripplecarbackend.model.entity.Garage;
 import com.charles.ripplecarbackend.model.entity.User;
 import com.charles.ripplecarbackend.model.entity.UserCar;
 import com.charles.ripplecarbackend.repository.UserCarRepository;
@@ -29,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserCarService implements BasicService {
 
     private final CarService carService;
-    private final GarageService garageService;
     private final UserCarMapper mapper;
     private final MessageSource ms;
     private final UserCarRepository repository;
@@ -47,22 +45,18 @@ public class UserCarService implements BasicService {
         int page = 0;
         int size = 10;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "id");
-        return new PageImpl<>(repository.findAll().stream().map(mapper::toBasicDto).toList(), pageRequest, size);
+        return new PageImpl<>(repository.findAllByUserId(userService.getAuthUser().getId()).stream().map(mapper::toBasicDto).toList(), pageRequest, size);
     }
 
     @Transactional
     public ResponseDTO save(UserCarDTO dto) {
         userService.get(dto.getUserId());
         carService.get(dto.getCarId());
-        garageService.getById(dto.getGarageId());
-        Garage garage = new Garage();
-        garage.setId(dto.getGarageId());
         Car car = new Car();
         car.setId(dto.getCarId());
         User user = new User();
         user.setId(dto.getUserId());
         UserCar userCar = mapper.toEntity(dto);
-        userCar.setGarage(garage);
         userCar.setCar(car);
         userCar.setUser(user);
         repository.save(userCar);
@@ -73,12 +67,8 @@ public class UserCarService implements BasicService {
     public ResponseDTO update(UserCarDTO dto, Long id) {
         UserCar userCar = repository.findByIdAndUserId(id, dto.getUserId()).orElseThrow(() -> getException("user.car.not.found"));
         carService.get(dto.getCarId());
-        garageService.get(dto.getGarageId());
-        Garage garage = new Garage();
-        garage.setId(dto.getGarageId());
         Car car = new Car();
         car.setId(dto.getCarId());
-        userCar.setGarage(garage);
         userCar.setCar(car);
         return getSuccess("user.car.updated");
     }

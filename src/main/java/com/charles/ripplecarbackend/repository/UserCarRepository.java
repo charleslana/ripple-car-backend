@@ -5,10 +5,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface UserCarRepository extends JpaRepository<UserCar, Long> {
+
+    @Query("select u from UserCar u where u.user.id = ?1")
+    List<UserCar> findAllByUserId(Long userId);
 
     @Query("select u from UserCar u where u.id = ?1 and u.user.id = ?2")
     Optional<UserCar> findByIdAndUserId(Long id, Long userId);

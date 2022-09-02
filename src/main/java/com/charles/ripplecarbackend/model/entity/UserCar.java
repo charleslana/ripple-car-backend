@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -62,8 +61,4 @@ public class UserCar implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id", nullable = false)
     private Car car;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "garage_id", nullable = false)
-    private Garage garage;
 }
