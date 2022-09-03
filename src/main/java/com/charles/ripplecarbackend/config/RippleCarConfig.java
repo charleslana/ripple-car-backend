@@ -58,7 +58,7 @@ public class RippleCarConfig {
     private void createCar() {
         Car car1 = new Car();
         car1.setName("Alfa Romeo 4C Concept");
-        car1.setImage("1");
+        car1.setImage("MW12_Alfa_Romeo_4C_Concept.png");
         car1.setNitro(0L);
         car1.setWeight(10L);
         car1.setPotency(5L);
@@ -71,7 +71,7 @@ public class RippleCarConfig {
 
         Car car2 = new Car();
         car2.setName("Alfa Romeo MiTo QV");
-        car2.setImage("2");
+        car2.setImage("MW12_Alfa_Romeo_MiTo_QV.jpg");
         car2.setNitro(0L);
         car2.setWeight(9L);
         car2.setPotency(4L);
