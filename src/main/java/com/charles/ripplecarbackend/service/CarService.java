@@ -70,6 +70,8 @@ public class CarService implements BasicService {
         car.setToughness(dto.getToughness());
         car.setPotency(dto.getPotency());
         car.setNitro(dto.getNitro());
+        car.setRarity(dto.getRarity());
+        car.setCarClass(dto.getCarClass());
         return getSuccess("car.updated");
     }
 
