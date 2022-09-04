@@ -49,15 +49,20 @@ public class UserController {
     @Operation(summary = "Get all users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
-    public ResponseEntity<Page<UserBasicDTO>> getAll() {
+    public ResponseEntity<Page<UserBasicDTO>> getAll(
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("REST to get all users");
-        return ResponseEntity.ok(service.getAll());
+        return ResponseEntity.ok(service.getAll(page, size));
     }
 
     @Operation(summary = "Get search users")
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
-    public ResponseEntity<Page<UserSearchDTO>> search(@RequestParam("searchTerm") String searchTerm, @RequestParam(value = "page", required = false, defaultValue = "0") int page, @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+    public ResponseEntity<Page<UserSearchDTO>> search(
+            @RequestParam("searchTerm") String searchTerm,
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("REST to get search users");
         return ResponseEntity.ok(service.search(searchTerm, page, size));
     }

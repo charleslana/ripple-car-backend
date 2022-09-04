@@ -1,6 +1,7 @@
 package com.charles.ripplecarbackend.service;
 
 import com.charles.ripplecarbackend.config.exception.BusinessRuleException;
+import com.charles.ripplecarbackend.interfaces.BasicService;
 import com.charles.ripplecarbackend.mapper.CarMapper;
 import com.charles.ripplecarbackend.model.dto.CarBasicDTO;
 import com.charles.ripplecarbackend.model.dto.CarDTO;
@@ -8,14 +9,13 @@ import com.charles.ripplecarbackend.model.dto.CarSearchDTO;
 import com.charles.ripplecarbackend.model.dto.ResponseDTO;
 import com.charles.ripplecarbackend.model.entity.Car;
 import com.charles.ripplecarbackend.repository.CarRepository;
-import com.charles.ripplecarbackend.service.interfaces.BasicService;
-import com.charles.ripplecarbackend.service.utils.LocaleUtils;
-import com.charles.ripplecarbackend.service.utils.MessageUtils;
+import com.charles.ripplecarbackend.utils.FunctionUtils;
+import com.charles.ripplecarbackend.utils.LocaleUtils;
+import com.charles.ripplecarbackend.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -37,17 +37,14 @@ public class CarService implements BasicService {
         return repository.findById(id).map(mapper::toBasicDto).orElseThrow(() -> getException("car.not.found"));
     }
 
-    public PageImpl<CarBasicDTO> getAll() {
-        int page = 0;
-        int size = 10;
+    public Page<CarBasicDTO> getAll(Integer page, Integer size) {
+        size = FunctionUtils.validatePageSize(size);
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
-        return new PageImpl<>(repository.findAll().stream().map(mapper::toBasicDto).toList(), pageRequest, size);
+        return repository.findAll(pageRequest).map(mapper::toBasicDto);
     }
 
     public Page<CarSearchDTO> search(String searchTerm, Integer page, Integer size) {
-        if (size <= 0 || size > 20) {
-            size = 1;
-        }
+        size = FunctionUtils.validatePageSize(size);
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
         return repository.search(searchTerm.toLowerCase(), pageRequest).map(mapper::toSearchDto);
     }

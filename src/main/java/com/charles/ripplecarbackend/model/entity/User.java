@@ -1,7 +1,7 @@
 package com.charles.ripplecarbackend.model.entity;
 
-import com.charles.ripplecarbackend.model.enums.RoleEnum;
-import com.charles.ripplecarbackend.model.enums.StatusEnum;
+import com.charles.ripplecarbackend.enums.RoleEnum;
+import com.charles.ripplecarbackend.enums.StatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -48,9 +49,11 @@ public class UserCarController {
     @Operation(summary = "Get all user cars")
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public ResponseEntity<Page<UserCarBasicDTO>> getAll() {
+    public ResponseEntity<Page<UserCarBasicDTO>> getAll(
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("REST to get all user cars");
-        return ResponseEntity.ok(service.getAll());
+        return ResponseEntity.ok(service.getAll(page, size));
     }
 
     @Operation(summary = "Create user car")

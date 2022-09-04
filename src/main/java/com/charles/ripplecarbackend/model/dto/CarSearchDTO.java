@@ -1,7 +1,7 @@
 package com.charles.ripplecarbackend.model.dto;
 
-import com.charles.ripplecarbackend.model.enums.CarClassEnum;
-import com.charles.ripplecarbackend.model.enums.RarityEnum;
+import com.charles.ripplecarbackend.enums.CarClassEnum;
+import com.charles.ripplecarbackend.enums.RarityEnum;
 import lombok.Getter;
 import lombok.Setter;
 

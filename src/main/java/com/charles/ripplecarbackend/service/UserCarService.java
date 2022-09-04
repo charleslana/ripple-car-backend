@@ -1,6 +1,7 @@
 package com.charles.ripplecarbackend.service;
 
 import com.charles.ripplecarbackend.config.exception.BusinessRuleException;
+import com.charles.ripplecarbackend.interfaces.BasicService;
 import com.charles.ripplecarbackend.mapper.UserCarMapper;
 import com.charles.ripplecarbackend.model.dto.ResponseDTO;
 import com.charles.ripplecarbackend.model.dto.UserCarBasicDTO;
@@ -9,13 +10,13 @@ import com.charles.ripplecarbackend.model.entity.Car;
 import com.charles.ripplecarbackend.model.entity.User;
 import com.charles.ripplecarbackend.model.entity.UserCar;
 import com.charles.ripplecarbackend.repository.UserCarRepository;
-import com.charles.ripplecarbackend.service.interfaces.BasicService;
-import com.charles.ripplecarbackend.service.utils.LocaleUtils;
-import com.charles.ripplecarbackend.service.utils.MessageUtils;
+import com.charles.ripplecarbackend.utils.FunctionUtils;
+import com.charles.ripplecarbackend.utils.LocaleUtils;
+import com.charles.ripplecarbackend.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -41,11 +42,10 @@ public class UserCarService implements BasicService {
         return repository.findById(id).map(mapper::toBasicDto).orElseThrow(() -> getException("user.car.not.found"));
     }
 
-    public PageImpl<UserCarBasicDTO> getAll() {
-        int page = 0;
-        int size = 10;
+    public Page<UserCarBasicDTO> getAll(Integer page, Integer size) {
+        size = FunctionUtils.validatePageSize(size);
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "id");
-        return new PageImpl<>(repository.findAllByUserId(userService.getAuthUser().getId()).stream().map(mapper::toBasicDto).toList(), pageRequest, size);
+        return repository.findAllByUserId(userService.getAuthUser().getId(), pageRequest).map(mapper::toBasicDto);
     }
 
     @Transactional

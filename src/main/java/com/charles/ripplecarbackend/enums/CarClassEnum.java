@@ -1,4 +1,4 @@
-package com.charles.ripplecarbackend.model.enums;
+package com.charles.ripplecarbackend.enums;
 
 public enum CarClassEnum {
     SPORT,

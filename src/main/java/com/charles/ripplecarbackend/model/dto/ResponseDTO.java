@@ -1,6 +1,6 @@
 package com.charles.ripplecarbackend.model.dto;
 
-import com.charles.ripplecarbackend.service.utils.LocaleUtils;
+import com.charles.ripplecarbackend.utils.LocaleUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

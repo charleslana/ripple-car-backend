@@ -1,4 +1,4 @@
-package com.charles.ripplecarbackend.service.interfaces;
+package com.charles.ripplecarbackend.interfaces;
 
 import com.charles.ripplecarbackend.config.exception.BusinessRuleException;
 import com.charles.ripplecarbackend.model.dto.ResponseDTO;

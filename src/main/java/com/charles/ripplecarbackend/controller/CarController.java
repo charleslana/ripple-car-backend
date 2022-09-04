@@ -42,15 +42,20 @@ public class CarController {
     @Operation(summary = "Get all cars")
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public ResponseEntity<Page<CarBasicDTO>> getAll() {
+    public ResponseEntity<Page<CarBasicDTO>> getAll(
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("REST to get all cars");
-        return ResponseEntity.ok(service.getAll());
+        return ResponseEntity.ok(service.getAll(page, size));
     }
 
     @Operation(summary = "Get search cars")
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
-    public ResponseEntity<Page<CarSearchDTO>> search(@RequestParam("searchTerm") String searchTerm, @RequestParam(value = "page", required = false, defaultValue = "0") int page, @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+    public ResponseEntity<Page<CarSearchDTO>> search(
+            @RequestParam("searchTerm") String searchTerm,
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("REST to get search cars");
         return ResponseEntity.ok(service.search(searchTerm, page, size));
     }

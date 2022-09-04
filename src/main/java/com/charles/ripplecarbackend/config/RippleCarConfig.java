@@ -2,10 +2,10 @@ package com.charles.ripplecarbackend.config;
 
 import com.charles.ripplecarbackend.model.entity.Car;
 import com.charles.ripplecarbackend.model.entity.User;
-import com.charles.ripplecarbackend.model.enums.CarClassEnum;
-import com.charles.ripplecarbackend.model.enums.RarityEnum;
-import com.charles.ripplecarbackend.model.enums.RoleEnum;
-import com.charles.ripplecarbackend.model.enums.StatusEnum;
+import com.charles.ripplecarbackend.enums.CarClassEnum;
+import com.charles.ripplecarbackend.enums.RarityEnum;
+import com.charles.ripplecarbackend.enums.RoleEnum;
+import com.charles.ripplecarbackend.enums.StatusEnum;
 import com.charles.ripplecarbackend.repository.CarRepository;
 import com.charles.ripplecarbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -2,6 +2,9 @@ package com.charles.ripplecarbackend.service;
 
 import com.charles.ripplecarbackend.config.exception.BusinessRuleException;
 import com.charles.ripplecarbackend.config.security.SecurityUtils;
+import com.charles.ripplecarbackend.enums.RoleEnum;
+import com.charles.ripplecarbackend.enums.StatusEnum;
+import com.charles.ripplecarbackend.interfaces.BasicService;
 import com.charles.ripplecarbackend.mapper.UserMapper;
 import com.charles.ripplecarbackend.model.dto.ResponseDTO;
 import com.charles.ripplecarbackend.model.dto.UserBasicDTO;
@@ -9,17 +12,14 @@ import com.charles.ripplecarbackend.model.dto.UserDTO;
 import com.charles.ripplecarbackend.model.dto.UserDetailsDTO;
 import com.charles.ripplecarbackend.model.dto.UserSearchDTO;
 import com.charles.ripplecarbackend.model.entity.User;
-import com.charles.ripplecarbackend.model.enums.RoleEnum;
-import com.charles.ripplecarbackend.model.enums.StatusEnum;
 import com.charles.ripplecarbackend.repository.UserRepository;
-import com.charles.ripplecarbackend.service.interfaces.BasicService;
-import com.charles.ripplecarbackend.service.utils.LocaleUtils;
-import com.charles.ripplecarbackend.service.utils.MessageUtils;
+import com.charles.ripplecarbackend.utils.FunctionUtils;
+import com.charles.ripplecarbackend.utils.LocaleUtils;
+import com.charles.ripplecarbackend.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
@@ -54,17 +54,14 @@ public class UserService implements UserDetailsService, BasicService {
         return repository.findById(id).map(mapper::toBasicDto).orElseThrow(() -> getException("user.not.found"));
     }
 
-    public PageImpl<UserBasicDTO> getAll() {
-        int page = 0;
-        int size = 10;
+    public Page<UserBasicDTO> getAll(Integer page, Integer size) {
+        size = FunctionUtils.validatePageSize(size);
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
-        return new PageImpl<>(repository.findAll().stream().map(mapper::toBasicDto).toList(), pageRequest, size);
+        return repository.findAll(pageRequest).map(mapper::toBasicDto);
     }
 
     public Page<UserSearchDTO> search(String searchTerm, Integer page, Integer size) {
-        if (size <= 0 || size > 20) {
-            size = 1;
-        }
+        size = FunctionUtils.validatePageSize(size);
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
         return repository.search(searchTerm.toLowerCase(), pageRequest).map(mapper::toSearchDto);
     }

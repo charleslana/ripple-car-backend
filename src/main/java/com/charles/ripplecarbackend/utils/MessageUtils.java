@@ -1,4 +1,4 @@
-package com.charles.ripplecarbackend.service.utils;
+package com.charles.ripplecarbackend.utils;
 
 public class MessageUtils {
 
