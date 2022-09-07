@@ -72,6 +72,7 @@ public class CarService implements BasicService {
         car.setNitro(dto.getNitro());
         car.setRarity(dto.getRarity());
         car.setCarClass(dto.getCarClass());
+        car.setMaxLevel(dto.getMaxLevel());
         return getSuccess("car.updated");
     }
 
