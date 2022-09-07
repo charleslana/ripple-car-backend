@@ -11,7 +11,10 @@ import com.charles.ripplecarbackend.model.dto.UserBasicDTO;
 import com.charles.ripplecarbackend.model.dto.UserDTO;
 import com.charles.ripplecarbackend.model.dto.UserDetailsDTO;
 import com.charles.ripplecarbackend.model.dto.UserSearchDTO;
+import com.charles.ripplecarbackend.model.entity.Car;
 import com.charles.ripplecarbackend.model.entity.User;
+import com.charles.ripplecarbackend.model.entity.UserCar;
+import com.charles.ripplecarbackend.repository.UserCarRepository;
 import com.charles.ripplecarbackend.repository.UserRepository;
 import com.charles.ripplecarbackend.utils.FunctionUtils;
 import com.charles.ripplecarbackend.utils.LocaleUtils;
@@ -45,6 +48,7 @@ public class UserService implements UserDetailsService, BasicService {
     private final UserMapper mapper;
     private final MessageSource ms;
     private final UserRepository repository;
+    private final UserCarRepository userCarRepository;
 
     public UserBasicDTO get() {
         return repository.findById(getAuthUser().getId()).map(mapper::toBasicDto).orElseThrow(() -> getException("user.not.found"));
@@ -72,7 +76,13 @@ public class UserService implements UserDetailsService, BasicService {
         validateExistsName(dto);
         User user = mapper.toEntity(dto);
         user.setPassword(encoder.encode(dto.getPassword()));
-        repository.save(user);
+        user = repository.save(user);
+        Car car = new Car();
+        car.setId(1L);
+        UserCar userCar = new UserCar();
+        userCar.setUser(user);
+        userCar.setCar(car);
+        userCarRepository.save(userCar);
         return getSuccess("user.created");
     }
 

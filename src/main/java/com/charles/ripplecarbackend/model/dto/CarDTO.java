@@ -62,4 +62,8 @@ public class CarDTO implements Serializable {
 
     @NotNull
     private CarClassEnum carClass;
+
+    @NotNull
+    @Min(1)
+    private Long maxLevel;
 }

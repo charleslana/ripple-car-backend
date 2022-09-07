@@ -74,6 +74,9 @@ public class Car implements Serializable {
     @Enumerated(EnumType.STRING)
     private CarClassEnum carClass;
 
+    @Column(name = "max_level", nullable = false)
+    private Long maxLevel;
+
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;

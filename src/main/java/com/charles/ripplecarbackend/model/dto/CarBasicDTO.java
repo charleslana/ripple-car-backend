@@ -27,4 +27,5 @@ public class CarBasicDTO implements Serializable {
     private Long nitro;
     private RarityEnum rarity;
     private CarClassEnum carClass;
+    private Long maxLevel;
 }
